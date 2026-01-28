@@ -27,7 +27,7 @@ const MainNavbar = () => {
                     navItems.map((items)=>{
                         return (
                             <Link href={items.href} key={items.label}>
-                                <span className='text-sm font-medium text-gray-500 hover:text-gray-700 hidden md:block'>{items.label}</span>
+                                <span className='text-sm font-medium text-gray-500 hover:text-gray-700 hidden md:block hover:underline cursor-pointer'>{items.label}</span>
                             </Link>
                         )
                     })

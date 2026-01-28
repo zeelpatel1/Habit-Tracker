@@ -4,7 +4,7 @@ import SignInDialog from '../auth/sign-in-dialog';
 
 const CreateGoal = () => {
 
-    const signedIn=false;
+    const signedIn=true;
 
     if(signedIn){
         return (
