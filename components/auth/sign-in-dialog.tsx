@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react'
 import {
     Dialog,
@@ -9,10 +11,25 @@ import {
     DialogTrigger
 } from '@/components/ui/dialog'
 import { Button } from '../ui/button'
-import {GoogleLogoIcon} from "@phosphor-icons/react/dist/ssr"
+import { GoogleLogoIcon } from "@phosphor-icons/react/dist/ssr"
 import { XLogoIcon } from '@phosphor-icons/react/dist/ssr'
+import { createAuthClient } from "better-auth/client";
 
 const SignInDialog = ({ triggerLabel }: { triggerLabel: string }) => {
+
+    const handleGoogleSignIn = async() => {
+        const authClient = createAuthClient();
+        const data=await authClient.signIn.social({
+          provider:"google"
+        })
+        console.log("sign-in result", data);
+        // const signIn = async () => {
+        //     const data = await authClient.signIn.social({
+        //         provider: "google",
+        //     });
+        // };
+    }
+
     return (
         <Dialog>
             <DialogTrigger>
@@ -30,13 +47,13 @@ const SignInDialog = ({ triggerLabel }: { triggerLabel: string }) => {
 
                 <div className='px-6 py-4'>
                     <div className='flex flex-col gap-4'>
-                        <Button variant={"outline"} className='w-full h-12 justify-center rounded-md border-2 text-base font-semibold'>
-                            <GoogleLogoIcon weight="bold" className='size-4 mr-2'/>
+                        <Button onClick={()=>handleGoogleSignIn()} variant={"outline"} className='w-full h-12 justify-center rounded-md border-2 text-base font-semibold'>
+                            <GoogleLogoIcon weight="bold" className='size-4 mr-2' />
                             Continue with Google
                         </Button>
 
                         <Button variant={"outline"} className='w-full h-12 justify-center rounded-md border-2 text-base font-semibold'>
-                            <XLogoIcon weight="bold" className='size-4 mr-2'/>
+                            <XLogoIcon weight="bold" className='size-4 mr-2' />
                             Continue with X
                         </Button>
 
