@@ -14,20 +14,19 @@ import { Button } from '../ui/button'
 import { GoogleLogoIcon } from "@phosphor-icons/react/dist/ssr"
 import { XLogoIcon } from '@phosphor-icons/react/dist/ssr'
 import { createAuthClient } from "better-auth/client";
+import { router } from 'better-auth/api';
+import { useRouter } from 'next/navigation';
 
 const SignInDialog = ({ triggerLabel }: { triggerLabel: string }) => {
+
+    const router = useRouter();
 
     const handleGoogleSignIn = async() => {
         const authClient = createAuthClient();
         const data=await authClient.signIn.social({
-          provider:"google"
+          provider:"google",
+          callbackURL:"/dashboard"
         })
-        console.log("sign-in result", data);
-        // const signIn = async () => {
-        //     const data = await authClient.signIn.social({
-        //         provider: "google",
-        //     });
-        // };
     }
 
     return (
