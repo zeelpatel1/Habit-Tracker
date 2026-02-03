@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from 'react'
-import { AnimatedThemeToggle } from '../animated-theme-toggle'
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import { motion, useMotionValue, useTransform } from 'framer-motion';

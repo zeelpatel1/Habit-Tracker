@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import MainNavbar from "@/components/core/MainNavbar";
+// import MainNavbar from "@/components/core/MainNavbar";
 import { ViewTransitions } from "next-view-transitions";
-import Main from "@/components/Landing/Main";
+// import Main from "@/components/Landing/Main";
 import { ThemeProvider } from "@/components/core/theme-provider";
 
 const geistSans = Geist({
@@ -36,8 +36,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <MainNavbar />
-            <Main />
+            {/* <Main /> */}
             {children}
           </ThemeProvider>
         </body>
