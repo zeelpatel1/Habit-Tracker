@@ -5,7 +5,7 @@ const page = async() => {
 
   return (
     <div className='flex h-screen w-screen'>
-        <Sidebar/>
+        {/* <Sidebar/> */}
     </div>
   )
 }
