@@ -14,6 +14,7 @@ import {
   ChartColumn
 } from 'lucide-react';
 import { useRouter } from "next/navigation"
+import Image from 'next/image';
 
 interface NavigationItem {
   id: string;
@@ -92,6 +93,7 @@ export function Sidebar({ className = "" }: { className?: string }) {
             <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
               <span className="text-white font-bold text-base">H</span>
             </div>
+            {/* <Image width={10} height={10} src="./public/logo.png" alt='logo'/> */}
             {!isCollapsed && <span className="font-semibold text-slate-800 text-base">Habit Tracker</span>}
           </div>
 
