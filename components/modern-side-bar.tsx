@@ -1,6 +1,9 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { authClient } from "@/lib/auth-client"
+import { Link } from 'next-view-transitions'
+import { usePathname, useRouter } from "next/navigation"
+import { cn } from '@/lib/utils'
 import { 
   Home, 
   Settings, 
@@ -11,10 +14,9 @@ import {
   ChevronLeft, 
   ChevronRight,
   Bell,
-  ChartColumn
+  ChartColumn,
+  Target
 } from 'lucide-react';
-import { useRouter } from "next/navigation"
-import Image from 'next/image';
 
 interface NavigationItem {
   id: string;
@@ -34,11 +36,11 @@ const navigationItems: NavigationItem[] = [
 
 export function Sidebar({ className = "" }: { className?: string }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { data: session } = authClient.useSession();
   
   const [isOpen, setIsOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [activeItem, setActiveItem] = useState("dashboard");
 
   useEffect(() => {
     const handleResize = () => {
@@ -59,12 +61,20 @@ export function Sidebar({ className = "" }: { className?: string }) {
     }
   };
 
+  const handleNavClick = (href: string) => {
+    router.push(href);
+    if (window.innerWidth < 768) {
+      setIsOpen(false);
+    }
+  };
+
   return (
     <>
       {/* Mobile hamburger */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-6 left-6 z-50 p-3 rounded-lg bg-white shadow-md border border-slate-100 md:hidden"
+        className="fixed top-4 left-4 z-50 p-2.5 rounded-lg bg-background shadow-md border border-border md:hidden"
+        aria-label="Toggle menu"
       >
         {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </button>
@@ -72,61 +82,89 @@ export function Sidebar({ className = "" }: { className?: string }) {
       {/* Mobile overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 md:hidden" 
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 md:hidden transition-opacity" 
           onClick={() => setIsOpen(false)} 
         />
       )}
 
       {/* Sidebar Container */}
       <aside
-        className={`
-          fixed top-0 left-0 h-full bg-white border-r border-slate-200 z-40 transition-all duration-300 ease-in-out flex flex-col
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}
-          ${isCollapsed ? "w-20" : "w-72"}
-          md:translate-x-0 md:relative
-          ${className}
-        `}
+        className={cn(
+          "fixed top-0 left-0 h-full bg-sidebar border-r border-sidebar-border z-40 transition-all duration-300 ease-in-out flex flex-col",
+          isOpen ? "translate-x-0" : "-translate-x-full",
+          isCollapsed ? "w-20" : "w-72",
+          "md:translate-x-0 md:relative",
+          className
+        )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-200 bg-slate-50/60">
-          <div className={`flex items-center space-x-2.5 ${isCollapsed ? 'mx-auto' : ''}`}>
-            <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-bold text-base">H</span>
+        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-sidebar-border">
+          <Link 
+            href="/dashboard" 
+            className={cn(
+              "flex items-center gap-2.5 transition-opacity hover:opacity-80",
+              isCollapsed && "mx-auto"
+            )}
+          >
+            <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center shrink-0">
+              <Target className="h-5 w-5 text-primary-foreground" />
             </div>
-            {/* <Image width={10} height={10} src="./public/logo.png" alt='logo'/> */}
-            {!isCollapsed && <span className="font-semibold text-slate-800 text-base">Habit Tracker</span>}
-          </div>
+            {!isCollapsed && (
+              <span className="font-semibold text-sidebar-foreground text-base">
+                Habit Tracker
+              </span>
+            )}
+          </Link>
 
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="hidden md:flex p-1.5 rounded-md hover:bg-slate-100"
+            className="hidden md:flex p-1.5 rounded-md hover:bg-sidebar-accent transition-colors"
+            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+            {isCollapsed ? (
+              <ChevronRight className="h-4 w-4 text-sidebar-foreground" />
+            ) : (
+              <ChevronLeft className="h-4 w-4 text-sidebar-foreground" />
+            )}
           </button>
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-3 py-2 overflow-y-auto">
-          <ul className="space-y-0.5">
+        <nav className="flex-1 px-3 py-4 overflow-y-auto">
+          <ul className="space-y-1">
             {navigationItems.map((item) => {
               const Icon = item.icon;
-              const isActive = activeItem === item.id;
+              const isActive = pathname === item.href || (item.href === '/dashboard' && pathname === '/dashboard');
+              
               return (
                 <li key={item.id}>
                   <button
-                    onClick={() => setActiveItem(item.id)}
-                    className={`
-                      w-full flex items-center px-3 py-2.5 rounded-md transition-all duration-200 group relative
-                      ${isActive ? "bg-blue-50 text-blue-700" : "text-slate-600 hover:bg-slate-50"}
-                      ${isCollapsed ? "justify-center" : "space-x-2.5"}
-                    `}
+                    onClick={() => handleNavClick(item.href)}
+                    className={cn(
+                      "w-full flex items-center rounded-lg transition-all duration-200 group relative",
+                      "px-3 py-2.5",
+                      isActive 
+                        ? "bg-sidebar-accent text-sidebar-accent-foreground" 
+                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                      isCollapsed ? "justify-center" : "gap-3"
+                    )}
                   >
-                    <Icon className={`h-5 w-5 flex-shrink-0 ${isActive ? "text-blue-600" : "text-slate-500"}`} />
+                    <Icon className={cn(
+                      "h-5 w-5 shrink-0",
+                      isActive ? "text-sidebar-primary" : "text-sidebar-foreground/70 group-hover:text-sidebar-accent-foreground"
+                    )} />
                     {!isCollapsed && (
-                      <div className="flex items-center justify-between w-full">
-                        <span className="text-sm font-medium">{item.name}</span>
-                        {item.badge && <span className="px-1.5 py-0.5 text-xs bg-slate-100 rounded-full">{item.badge}</span>}
+                      <div className="flex items-center justify-between w-full min-w-0">
+                        <span className="text-sm font-medium truncate">{item.name}</span>
+                        {item.badge && (
+                          <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-sidebar-primary/20 text-sidebar-primary rounded-full">
+                            {item.badge}
+                          </span>
+                        )}
                       </div>
+                    )}
+                    {isActive && !isCollapsed && (
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-sidebar-primary rounded-r-full" />
                     )}
                   </button>
                 </li>
@@ -136,24 +174,42 @@ export function Sidebar({ className = "" }: { className?: string }) {
         </nav>
 
         {/* Footer Profile & Logout */}
-        <div className="mt-auto border-t border-slate-200">
-          {/* <div className={`p-4 flex items-center ${isCollapsed ? 'justify-center' : 'space-x-3'}`}>
-            <div className="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center text-xs font-bold">
-              {session?.user.name?.charAt(0) ?? "U"}
+        <div className="mt-auto border-t border-sidebar-border p-3 space-y-2">
+          {/* User Profile Section */}
+          {session?.user && (
+            <div className={cn(
+              "flex items-center gap-3 px-3 py-2 rounded-lg",
+              isCollapsed && "justify-center"
+            )}>
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <span className="text-xs font-bold text-primary">
+                  {session.user.name?.charAt(0).toUpperCase() ?? "U"}
+                </span>
+              </div>
+              {!isCollapsed && (
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-sidebar-foreground truncate">
+                    {session.user.name}
+                  </p>
+                  <p className="text-xs text-sidebar-foreground/60 truncate">
+                    {session.user.email}
+                  </p>
+                </div>
+              )}
             </div>
-            {!isCollapsed && (
-              <span className="text-sm font-medium truncate">{session?.user.name}</span>
+          )}
+          
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className={cn(
+              "w-full flex items-center text-destructive hover:bg-destructive/10 rounded-lg p-2.5 transition-colors",
+              isCollapsed ? "justify-center" : "gap-3"
             )}
-          </div> */}
-          <div className="p-3">
-            <button
-              onClick={handleLogout}
-              className={`w-full flex items-center text-red-600 hover:bg-red-50 rounded-md p-2.5 ${isCollapsed ? 'justify-center' : 'space-x-2.5'}`}
-            >
-              <LogOut className="h-5 w-5" />
-              {!isCollapsed && <span className="text-sm">Logout</span>}
-            </button>
-          </div>
+          >
+            <LogOut className="h-5 w-5" />
+            {!isCollapsed && <span className="text-sm font-medium">Logout</span>}
+          </button>
         </div>
       </aside>
     </>
