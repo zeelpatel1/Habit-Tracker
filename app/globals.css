@@ -3,9 +3,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-html {
-  filter: grayscale(100%);
-}
 
 @theme inline {
   --color-background: var(--background);
