@@ -4,6 +4,8 @@ import Tracker from '@/components/Tracker'
 import { Searchbar } from '@/components/ui/Searchbar'
 import { Username } from '@/components/ui/User'
 import { Bell, User } from 'lucide-react'
+import {Calendar} from '@/components/ui/calendar'
+
 import React from 'react'
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
@@ -29,7 +31,10 @@ export default async function Layout({ children }: { children: React.ReactNode }
                         <Username />
                     </div>
                     <Tracker />
-                    <Progress/>
+                    <div className='flex gap-8 max-w-250 rounded-lg min-h-[430px] w-full flex-wrap items-start  bg-background p-4'>
+                        <Progress/>
+                        <Calendar mode='single' disabled={{ before: new Date() }} className='shadow rounded-lg border w-full max-w-sm h-full min-h-[380px]'/>
+                    </div>
                 </div>
 
                 {children}

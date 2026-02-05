@@ -43,7 +43,7 @@ const Tracker = () => {
     <div>
       <p className="text-lg font-medium">You've completed 4/6 habits today</p>
 
-      <div className="mt-5 bg-[#FFFFFF] p-2 rounded-lg">
+      <div className="mt-5 bg-[#FFFFFF] p-4 mb-4 rounded-lg max-w-250 ">
         <h2 className="text-xl font-semibold mb-3">Active Challenges</h2>
 
         <div className="flex flex-wrap gap-3">
