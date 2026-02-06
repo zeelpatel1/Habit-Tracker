@@ -1,77 +1,80 @@
-import React from "react";
+import React from "react"
 
-const ActiveChallange = [
+const ActiveChallenge = [
   {
     title: "Detox with apple",
-    logo: "", // you can add an image or icon here
     category: "Health",
     days: 7,
-    bgColor: "green",
+    color: "green",
   },
   {
-    title:"Read 10 Pages a Day",
-    logo:"",
-    category:"Learn",
-    days:14,
-    bgColor:"yellow"
+    title: "Read 10 Pages a Day",
+    category: "Learn",
+    days: 14,
+    color: "yellow",
   },
   {
-    title:"No Sugar for 5 days",
-    logo:"",
-    category:"Heath",
-    days:5,
-    bgColor:"pink"
+    title: "No Sugar for 5 days",
+    category: "Health",
+    days: 5,
+    color: "pink",
   },
   {
-    title:"Breath Exercise",
-    logo:"",
-    category:"Heath",
-    days:42,
-    bgColor:"pink"
+    title: "Breath Exercise",
+    category: "Health",
+    days: 42,
+    color: "pink",
   },
   {
-    title:"Yoga Exercise",
-    logo:"",
-    category:"Heath",
-    days:42,
-    bgColor:"pink"
-  }
-];
+    title: "Yoga Exercise",
+    category: "Health",
+    days: 42,
+    color: "pink",
+  },
+]
+
+const colorMap: Record<string, string> = {
+  green: "bg-green-500",
+  yellow: "bg-yellow-500",
+  pink: "bg-pink-500",
+}
 
 const Tracker = () => {
   return (
     <div>
-      <p className="text-lg font-medium">You've completed 4/6 habits today</p>
+      <p className="text-lg font-medium text-foreground">
+        You've completed 4/6 habits today
+      </p>
 
-      <div className="mt-5 bg-[#FFFFFF] p-4 mb-4 rounded-lg max-w-250 ">
-        <h2 className="text-xl font-semibold mb-3">Active Challenges</h2>
+      <div className="mt-5 bg-card border border-border p-4 mb-4 rounded-lg">
+        <h2 className="text-xl font-semibold mb-3 text-foreground">
+          Active Challenges
+        </h2>
 
         <div className="flex flex-wrap gap-3">
-          {ActiveChallange.map((item) => (
+          {ActiveChallenge.map((item) => (
             <div
               key={item.title}
-              className="bg-gray-200 inline-flex items-center gap-4 p-3 rounded-lg"
+              className="bg-accent inline-flex items-center gap-4 p-3 rounded-lg"
             >
-              {/* Logo circle */}
+              {/* Logo */}
               <div
                 className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                  item.bgColor === "green"
-                    ? "bg-green-500"
-                    : "bg-gray-500"
+                  colorMap[item.color] ?? "bg-muted"
                 }`}
               >
-                {item.logo || (
-                  <span className="text-white font-bold text-lg">
-                    {item.title[0]}
-                  </span>
-                )}
+                <span className="text-white font-bold text-lg">
+                  {item.title[0]}
+                </span>
               </div>
 
-              {/* Challenge info */}
+              {/* Info */}
               <div>
-                <p className="font-semibold text-gray-800">{item.title}</p>
-                <div className="flex gap-4 text-gray-600 mt-1 text-sm">
-                  <span>{item.days}-days</span>
+                <p className="font-semibold text-foreground">
+                  {item.title}
+                </p>
+                <div className="flex gap-4 text-muted-foreground mt-1 text-sm">
+                  <span>{item.days} days</span>
                   <span>{item.category} Challenge</span>
                 </div>
               </div>
@@ -80,7 +83,7 @@ const Tracker = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Tracker;
+export default Tracker
