@@ -1,12 +1,15 @@
 "use client";
 import React from 'react'
 import {CircularProgressCard} from "@/components/circular-progress-card"
+import { Calendar } from './ui/calendar';
+
 
 export const Progress = ()=>{
     return (
-        <div className="flex min-h-[500px] w-full flex-wrap items-start justify-start gap-8 bg-background p-4">
+        <div>
             {/* Example: Custom color passed as a prop */}
             <CircularProgressCard
+                className='h-full min-h-[380px]'
                 title="Daily Progress"
                 description="Tasks completed for the new feature launch."
                 currentValue={128}
