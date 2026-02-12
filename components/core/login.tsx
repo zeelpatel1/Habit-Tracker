@@ -3,7 +3,7 @@ import { Button } from '../ui/button';
 import SignInDialog from '../auth/sign-in-dialog';
 import {auth} from '@/lib/auth'
 
-const CreateGoal = async() => {
+const Login = async() => {
 
   // const session=await auth.api.getSession();
   // console.log(session);
@@ -13,7 +13,7 @@ const CreateGoal = async() => {
     if(signedIn){
         return (
             <Button>
-                Create Goal
+                Login
             </Button>
         )
     }
@@ -23,4 +23,4 @@ const CreateGoal = async() => {
   )
 }
 
-export default CreateGoal
+export default Login

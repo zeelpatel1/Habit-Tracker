@@ -2,12 +2,12 @@ import MainNavbar from '@/components/core/MainNavbar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import SignInDialog from '@/components/auth/sign-in-dialog'
-import { 
-  Target, 
-  TrendingUp, 
-  Calendar, 
-  BarChart3, 
-  CheckCircle2, 
+import {
+  Target,
+  TrendingUp,
+  Calendar,
+  BarChart3,
+  CheckCircle2,
   Sparkles,
   ArrowRight
 } from 'lucide-react'

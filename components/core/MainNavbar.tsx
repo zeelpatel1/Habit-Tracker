@@ -2,8 +2,9 @@ import { Link } from 'next-view-transitions'
 import React from 'react'
 import Container from './Container'
 import ThemeToggle from './theme-toggle'
-import CreateGoal from './create-goal'
+import CreateGoal from './login'
 import { Target } from 'lucide-react'
+import Login from './login'
 
 const navItems = [
     {
@@ -40,7 +41,7 @@ const MainNavbar = () => {
                         } */}
                     </div>
                     <div className='flex items-center gap-4'>
-                        <CreateGoal />
+                        <Login/>
                         <ThemeToggle />
                     </div>
                 </div>
