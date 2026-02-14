@@ -19,8 +19,6 @@ import { useRouter } from 'next/navigation';
 
 const SignInDialog = ({ triggerLabel }: { triggerLabel: string }) => {
 
-    const router = useRouter();
-
     const handleGoogleSignIn = async() => {
         const authClient = createAuthClient();
         const data=await authClient.signIn.social({

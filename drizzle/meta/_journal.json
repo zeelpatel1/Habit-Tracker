@@ -8,6 +8,13 @@
       "when": 1769596147119,
       "tag": "0000_sleepy_falcon",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1771042370798,
+      "tag": "0001_curvy_war_machine",
+      "breakpoints": true
     }
   ]
 }

@@ -1,2 +1,2 @@
-import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
-
+export * from '@/schema/auth-schema'
+export * from '@/schema/goals-schema'

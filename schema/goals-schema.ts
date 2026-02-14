@@ -34,7 +34,7 @@ export const goalTypeEnum = pgEnum("goal_type", [
   
       startDate: timestamp("start_date").notNull(),
   
-      endDate: timestamp("end_date"),
+      endDate: timestamp("end_date").notNull(),
   
       isCompleted: boolean("is_completed").default(false).notNull(),
   

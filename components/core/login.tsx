@@ -8,7 +8,7 @@ const Login = async() => {
   // const session=await auth.api.getSession();
   // console.log(session);
 
-    const signedIn=true;
+    const signedIn=false;
 
     if(signedIn){
         return (
@@ -19,7 +19,7 @@ const Login = async() => {
     }
 
   return (
-    <SignInDialog triggerLabel="Create Goal"/>
+    <SignInDialog triggerLabel="Login"/>
   )
 }
 
