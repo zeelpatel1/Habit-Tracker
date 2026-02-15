@@ -6,7 +6,9 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
 
     try {
-        const session = await auth.api.getSession();
+        const session = await auth.api.getSession({
+            headers: req.headers
+        });
 
         if (!session?.user) {
             return NextResponse.json(
@@ -15,22 +17,51 @@ export async function POST(req: NextRequest) {
             )
         }
         const body = await req.json();
-        console.log(body);
+        
+
+        const start = new Date(body.startDate);
+        let endDate = new Date(start);
+
+        const type = body.type.toUpperCase(); // ✅ important
+
+        switch (type) {
+            case "YEARLY":
+                endDate.setFullYear(start.getFullYear() + 1);
+                break;
+
+            case "MONTHLY":
+                endDate.setMonth(start.getMonth() + 1);
+                break;
+
+            case "WEEKLY":
+                endDate.setDate(start.getDate() + 7);
+                break;
+
+            case "DAILY":
+                endDate.setDate(start.getDate() + 1);
+                break;
+        }
 
         const newGoal = await db.insert(goal).values({
             id: crypto.randomUUID(),
             userId: session.user.id,
-            type: body.type,
+            type: type, // ✅ matches ENUM exactly
             title: body.title,
             description: body.description,
-            startDate: new Date(body.startDate),
-            endDate: new Date(body.endDate),
-        }).returning()
+            startDate: start,
+            endDate: endDate,
+        }).returning();
 
-        return NextResponse.json(newGoal)
+        return NextResponse.json(newGoal);
+
+
 
 
     } catch (error) {
         console.log(error)
+        return NextResponse.json(
+            { error: "Something went wrong" },
+            { status: 500 }
+        )
     }
 }
