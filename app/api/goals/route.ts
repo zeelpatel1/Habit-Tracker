@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { goal } from "@/schema";
 import { NextRequest, NextResponse } from "next/server";
+import {eq,desc} from 'drizzle-orm'
 
 export async function POST(req: NextRequest) {
 
@@ -45,7 +46,7 @@ export async function POST(req: NextRequest) {
         const newGoal = await db.insert(goal).values({
             id: crypto.randomUUID(),
             userId: session.user.id,
-            type: type, // ✅ matches ENUM exactly
+            type: type,
             title: body.title,
             description: body.description,
             startDate: start,
@@ -63,5 +64,37 @@ export async function POST(req: NextRequest) {
             { error: "Something went wrong" },
             { status: 500 }
         )
+    }
+}
+
+export async function GET(req:NextRequest){
+    try {
+        const session = await auth.api.getSession({
+            headers: req.headers,
+          });
+      
+          if (!session?.user) {
+            return NextResponse.json(
+              { error: "Unauthorized" },
+              { status: 401 }
+            );
+          }
+
+          const goals = await db
+            .select()
+            .from(goal)
+            .where(eq(goal.userId, session.user.id))
+            .orderBy(desc(goal.createdAt))
+
+        console.log(goals);
+
+          return NextResponse.json(goals);
+
+    } catch (error) {
+        console.log(error);
+        return NextResponse.json(
+            { error: "Something went wrong" },
+            { status: 500 }
+        );
     }
 }

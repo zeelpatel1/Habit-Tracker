@@ -1,4 +1,5 @@
-import React from "react"
+"use client";
+import React, { useEffect, useState } from "react"
 
 const ActiveChallenge = [
   {
@@ -39,7 +40,35 @@ const colorMap: Record<string, string> = {
   pink: "bg-pink-500",
 }
 
+type goalType={
+  title:string,
+  description:string,
+  isCompleted:boolean,
+  type:"YEARLY" | "MONTHLY" | "WEEKLY" | "DAILY",
+}
+
 const Tracker = () => {
+
+  const [goals,setGoals]=useState<(goalType & {color:string})[]>([]);
+
+  useEffect(()=>{
+
+    const fetchGols=async()=>{
+      const res=await fetch("http://localhost:3000/api/goals",{
+        method:"GET"
+      })
+      const data=await res.json()
+      const goalsWithColor=data.map((goal:goalType) => ({
+        ...goal,
+        color:ColorGenerator() 
+      }))
+      setGoals(goalsWithColor)
+      // console.log(data)
+    }
+    fetchGols()
+    
+  },[])
+
   return (
     <div>
       <p className="text-lg font-medium text-foreground">
@@ -52,16 +81,15 @@ const Tracker = () => {
         </h2>
 
         <div className="flex flex-wrap gap-3">
-          {ActiveChallenge.map((item) => (
+          {goals.map((item) => (
             <div
               key={item.title}
               className="bg-accent inline-flex items-center gap-4 p-3 rounded-lg"
             >
               {/* Logo */}
               <div
-                className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                  colorMap[item.color] ?? "bg-muted"
-                }`}
+                className={`w-12 h-12 rounded-full flex items-center justify-center`}
+                style={{backgroundColor:item.color}}
               >
                 <span className="text-white font-bold text-lg">
                   {item.title[0]}
@@ -74,8 +102,8 @@ const Tracker = () => {
                   {item.title}
                 </p>
                 <div className="flex gap-4 text-muted-foreground mt-1 text-sm">
-                  <span>{item.days} days</span>
-                  <span>{item.category} Challenge</span>
+                  <span>{item.type}</span>
+                  <span>{item.isCompleted ? "Completed" : "Active"}</span>
                 </div>
               </div>
             </div>
@@ -87,3 +115,16 @@ const Tracker = () => {
 }
 
 export default Tracker
+
+
+function ColorGenerator() {
+  const letters="0123456789ABCDEF"
+  let color="#";
+
+  for (let i=0;i<6;i++){
+    color+=letters[Math.floor(Math.random()*16)];
+  }
+
+  return color;
+
+}

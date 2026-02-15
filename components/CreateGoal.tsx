@@ -101,26 +101,6 @@ const CreateGoal = () => {
                 />
               </div>
             </div>
-            
-            
-
-{/* {activeGoal === "Monthly" && (
-              <div className="space-y-4">
-
-                <div className="flex items-center gap-5">
-                  <Input value={monthlyGoal.title} onChange={(e)=>setMonthyGoal({...monthlyGoal,title:e.target.value})} placeholder="Monthy goal" />
-                  <Input value={monthlyGoal.description} onChange={(e)=>setMonthyGoal({...monthlyGoal,description:e.target.value})} placeholder="Description" />
-                </div>
-
-                <div className="w-[160px] flex flex-col">
-                  <span className="text-xs text-muted-foreground mb-1">
-                    Start Date
-                  </span>
-                  <Input type="date" value={monthlyGoal.startDate} onChange={(e)=>setMonthyGoal({...monthlyGoal,startDate:e.target.value})}/>
-                </div>
-
-              </div>
-            )} */}
 
           </div>
           <div className="flex justify-end gap-2 pt-4 border-t">
