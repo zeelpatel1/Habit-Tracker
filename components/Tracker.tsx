@@ -41,6 +41,7 @@ const colorMap: Record<string, string> = {
 }
 
 type goalType={
+  id:string,
   title:string,
   description:string,
   isCompleted:boolean,
@@ -68,6 +69,19 @@ const Tracker = () => {
     fetchGols()
     
   },[])
+
+  const handleDelete=async(id:string)=>{
+    try {
+      const res=await fetch('/api/goals',{
+        method:"DELETE",
+        body:JSON.stringify({id})
+      })
+      console.log(res)
+      setGoals((prev)=>prev.filter((goal)=>goal.id !== id))
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <div>
@@ -106,6 +120,9 @@ const Tracker = () => {
                   <span>{item.isCompleted ? "Completed" : "Active"}</span>
                 </div>
               </div>
+
+              <button onClick={()=>handleDelete(item.id)} className="bg-red-500 text-white px-3 py-1 rounded-md text-sm hover:bg-red-600 transition">Delete</button>
+
             </div>
           ))}
         </div>

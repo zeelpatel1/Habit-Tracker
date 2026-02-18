@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { goal } from "@/schema";
 import { NextRequest, NextResponse } from "next/server";
-import {eq,desc} from 'drizzle-orm'
+import {eq,desc, and} from 'drizzle-orm'
 
 export async function POST(req: NextRequest) {
 
@@ -96,5 +96,40 @@ export async function GET(req:NextRequest){
             { error: "Something went wrong" },
             { status: 500 }
         );
+    }
+}
+
+export async function DELETE(req:NextRequest){
+    try {
+        const session = await auth.api.getSession({
+            headers: req.headers,
+          });
+      
+          if (!session?.user) {
+            return NextResponse.json(
+              { error: "Unauthorized" },
+              { status: 401 }
+            );
+          }
+          
+        const {id}=await req.json()
+        console.log(id)
+
+        if(!id){
+            return NextResponse.json({error:"Goal id is required"},{status:400})
+        }
+
+        const deletedGoal=await db.delete(goal).where(and(eq(goal.id,id),eq(goal.userId,session.user.id))).returning()
+        console.log(deletedGoal)
+
+        if(deletedGoal.length===0){
+            return NextResponse.json({error:"Goal not found"},{status:404})
+        }
+
+        return NextResponse.json({success:true,deletedGoal})
+
+    } catch (error) {
+        console.log(error)
+        return NextResponse.json({error:"Something went wrong"},{status:500})
     }
 }

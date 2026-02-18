@@ -25,6 +25,7 @@ const SignInDialog = ({ triggerLabel }: { triggerLabel: string }) => {
           provider:"google",
           callbackURL:"/dashboard"
         })
+        // console.log(data.error)
     }
 
     return (
