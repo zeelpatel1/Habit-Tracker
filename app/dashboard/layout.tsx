@@ -47,25 +47,25 @@ export default async function Layout({
           <Tracker />
 
           {/* Progress + Calendar */}
-          <div className="flex flex-wrap gap-8 rounded-lg bg-background border border-border p-4">
-            <Progress />
+          {/* <div className="flex flex-wrap gap-8 rounded-lg bg-background border border-border p-4"> */}
+            {/* <Progress /> */}
 
             <Calendar
               mode="single"
               disabled={{ before: new Date() }}
               className="shadow rounded-lg border border-border w-full max-w-sm min-h-[380px]"
             />
-          </div>
+          {/* </div> */}
 
           {/* Charts */}
-          <div className="flex flex-wrap items-center gap-8 w-full">
-            <div className="max-w-[600px] min-h-[320px]">
-              <DottedLineChart />
-            </div>
+          <div className="items-center gap-8 w-full">
+            {/* <div className="max-w-[600px] min-h-[320px]"> */}
+              {/* <DottedLineChart /> */}
+            {/* </div> */}
 
-            <div className="bg-background border border-border rounded-lg p-2">
+            {/* <div className="bg-background border border-border rounded-lg p-2">
               <MiniChart />
-            </div>
+            </div> */}
           </div>
         </div>
 

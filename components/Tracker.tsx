@@ -1,4 +1,5 @@
 "use client";
+import { goal } from "@/schema";
 import React, { useEffect, useState } from "react"
 
 const ActiveChallenge = [
@@ -52,6 +53,8 @@ const Tracker = () => {
 
   const [goals,setGoals]=useState<(goalType & {color:string})[]>([]);
 
+  const [completed,setCompleted]=useState(false);
+
   useEffect(()=>{
 
     const fetchGols=async()=>{
@@ -82,7 +85,7 @@ const Tracker = () => {
       console.error(error)
     }
   }
-
+        
   return (
     <div>
       <p className="text-lg font-medium text-foreground">
@@ -97,8 +100,9 @@ const Tracker = () => {
         <div className="flex flex-wrap gap-3">
           {goals.map((item) => (
             <div
-              key={item.title}
+              key={item.id}
               className="bg-accent inline-flex items-center gap-4 p-3 rounded-lg"
+              onClick={()=>setCompleted(true)}
             >
               {/* Logo */}
               <div

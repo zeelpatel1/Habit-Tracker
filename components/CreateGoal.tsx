@@ -10,112 +10,162 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog"
-import { cn } from "@/lib/utils"
 import { Input } from "./ui/input"
-import { Plus, Trash } from "lucide-react"
-import { usePathname } from "next/navigation"
 
 type GoalItem = {
-  type:string,
+  type: string
   title: string
   description: string
   startDate: string
-  // endDate: string
 }
 
 const CreateGoal = () => {
-
   const goalTypes = ["Yearly", "Monthly", "Weekly", "Daily"]
-  const [activeGoal, setActiveGoal] = useState("Yearly");
+  const [activeGoal, setActiveGoal] = useState("Yearly")
 
-  // for now I am taking only one yearly goal at a time as input
+  const [loading,setLoading]=useState(false);
+
   const [goal, setGoal] = useState<GoalItem>({
+    type: "Yearly",
     title: "",
     description: "",
     startDate: "",
-    type: "Yearly"
   })
 
-  const handleSave=async()=>{
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = e.target
+    setGoal((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
     try {
-      const res=await fetch(`http://localhost:3000/api/goals`,{
-        method:"POST",
-        body:JSON.stringify({
+      setLoading(true)
+      const res = await fetch(`http://localhost:3000/api/goals`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           ...goal,
-          type:goal.type.toUpperCase()
-        })
+          type: goal.type.toUpperCase(),
+        }),
       })
-      const data=await res.json()
-      console.log(data)
+
+      const data = await res.json()
+
+      // Reset form after success
+      setGoal({
+        type: "Yearly",
+        title: "",
+        description: "",
+        startDate: "",
+      })
+      setActiveGoal("Yearly")
     } catch (error) {
       console.log(error)
+    }finally{
+      setLoading(false);
     }
   }
 
+  // It runs everytime                                        ------> LIMITATION
+  const currentDate=new Date().toISOString().split('T')[0]
+
+
   return (
     <Dialog>
-      <form action="">
-        <DialogTrigger asChild>
-          <Button variant="outline">Create Goals</Button>
-        </DialogTrigger>
-        <DialogContent showCloseButton={false} className="sm:max-w-md">
-          <div className="flex items-center gap-8">
-            {goalTypes.map((type) => (
+      <DialogTrigger asChild>
+        <Button variant="outline">Create Goals</Button>
+      </DialogTrigger>
 
-              <Button key={type} type="button" variant="outline" onClick={() => {
-                setActiveGoal(type)
-                setGoal(prev=>({...prev,type}))
-              }} className={`${activeGoal == type && "bg-primary text-primary-foreground hover:bg-primary"}`}>{type}</Button>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Create a New Goal</DialogTitle>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Goal Type Selection */}
+          <div className="flex items-center gap-3 flex-wrap">
+            {goalTypes.map((type) => (
+              <Button
+                key={type}
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setActiveGoal(type)
+                  setGoal((prev) => ({ ...prev, type }))
+                }}
+                className={
+                  activeGoal === type
+                    ? "bg-primary text-primary-foreground hover:bg-primary"
+                    : ""
+                }
+              >
+                {type}
+              </Button>
             ))}
           </div>
-          <div className="no-scrollbar -mx-4 max-h-[50vh] overflow-y-auto px-4">
 
-              <div className="space-y-4">
-              <div className="flex items-center gap-5">
-                <Input
-                  value={goal.title}
-                  onChange={(e) =>
-                    setGoal({ ...goal, title: e.target.value })
-                  }
-                  placeholder={`${activeGoal} goal`}
-                />
-                <Input
-                  value={goal.description}
-                  onChange={(e) =>
-                    setGoal({ ...goal, description: e.target.value })
-                  }
-                  placeholder="Description"
-                />
-              </div>
-            
-              <div className="w-[160px] flex flex-col">
-                <span className="text-xs text-muted-foreground mb-1">
-                  Start Date
-                </span>
-                <Input
-                  type="date"
-                  value={goal.startDate}
-                  onChange={(e) =>
-                    setGoal({ ...goal, startDate: e.target.value })
-                  }
-                />
-              </div>
-            </div>
-
+          {/* Title */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Title</label>
+            <Input
+              name="title"
+              value={goal.title}
+              onChange={handleChange}
+              placeholder={`${activeGoal} goal`}
+              required
+            />
           </div>
+
+          {/* Description */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Description</label>
+            <Input
+              name="description"
+              value={goal.description}
+              onChange={handleChange}
+              placeholder="Goal description"
+              required
+            />
+          </div>
+
+          {/* Start Date */}
+          <div className="space-y-2 w-[200px]">
+            <label className="text-sm font-medium">Start Date</label>
+            <Input
+              type="date"
+              min={currentDate}
+              name="startDate"
+              value={goal.startDate}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          {/* Actions */}
           <div className="flex justify-end gap-2 pt-4 border-t">
-          <DialogClose asChild>
-            <Button variant="outline">Close</Button>
-          </DialogClose>
+            <DialogClose asChild>
+              <Button type="button" variant="outline">
+                Cancel
+              </Button>
+            </DialogClose>
 
-          <Button onClick={handleSave}>Save</Button>
-        </div>
-        </DialogContent>
-      </form>
-
+            <Button disabled={loading} type="submit">
+              {loading ? "Creating Goal..." : "Create Goal"}
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
     </Dialog>
   )
-
 }
 
 export default CreateGoal
